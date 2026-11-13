@@ -38,7 +38,7 @@ flowchart TD
     end
 
 
-🛠️ Technologies Utilisées
+## 🛠️ Technologies Utilisées
 Solidity – Développement du smart contract
 Ethereum Sepolia Testnet – Réseau blockchain de test
 Remix IDE – Compilation, tests unitaires et déploiement du smart contract
@@ -50,7 +50,7 @@ IPFS – Stockage décentralisé et immuable des fichiers PDF
 SHA-256 – Empreinte cryptographique calculée localement par le navigateur
 
 
-📋 Informations du Smart Contract
+## 📋 Informations du Smart Contract
 Fichier : DiplomaVerification.sol
 Réseau : Ethereum Sepolia Testnet
 Chain ID : 11155111
@@ -61,7 +61,7 @@ verifyDiploma(bytes32 _pdfHash) : Vérifie l'existence et la validité d'un dipl
 revokeDiploma(bytes32 _pdfHash) : Révoque un diplôme précédemment enregistré (réservé à l'administrateur).
 
 
-🧪 Tests du Smart Contract
+## 🧪 Tests du Smart Contract
 Les tests unitaires automatisés ont été exécutés avec succès dans Remix IDE.
 Scénarios de test validés :
 Vérification de l'attribution correcte de l'adresse administrateur (universityAdmin).
