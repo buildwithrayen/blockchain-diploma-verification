@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Credential Verification System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased flex flex-col justify-between">
+
+  <!-- Institutional Top Bar -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+      
+      <!-- Academic Shield Icon & Title -->
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 bg-slate-900 text-white rounded-lg flex items-center justify-center shadow-sm">
+          <svg class="w-5 h-5 text-slate-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-5.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold tracking-tight text-slate-900 leading-none">ACADEMIC CREDENTIAL REGISTRY</h1>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Ethereum Public Ledger &bull; Sepolia Testnet</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <!-- Glowing Green Live Indicator -->
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="relative flex h-2 w-2 mr-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          Sepolia Live
+        </span>
+        <!-- Connect MetaMask Button -->
+        <button id="connectWalletBtn" onclick="connectWallet()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-md transition shadow-sm cursor-pointer">
+          Connect MetaMask
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-6 py-8 flex-grow w-full">
+    
+    <!-- Navigation Tabs -->
+    <div class="flex space-x-1 bg-slate-200/70 p-1 rounded-lg mb-6 text-xs font-medium text-slate-600 max-w-md">
+      <button id="tabVerifyBtn" onclick="showTab('verify')" class="flex-1 py-2 text-center rounded-md bg-white text-slate-900 shadow-sm font-semibold transition cursor-pointer">
+        Verify Diploma
+      </button>
+      <button id="tabAdminBtn" onclick="showTab('admin')" class="flex-1 py-2 text-center rounded-md hover:text-slate-900 transition cursor-pointer">
+        Issue Diploma
+      </button>
+      <button id="tabRevokeBtn" onclick="showTab('revoke')" class="flex-1 py-2 text-center rounded-md hover:text-red-700 transition cursor-pointer">
+        Revocation
+      </button>
+    </div>
+
+    <!-- 1. VERIFICATION VIEW (Recruiters) -->
+    <section id="verifySection" class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+      <div class="border-b border-slate-100 pb-4 mb-6">
+        <h2 class="text-base font-semibold text-slate-900">Credential Authentication</h2>
+        <p class="text-xs text-slate-500 mt-0.5">Validate the integrity and origin of an academic certificate against cryptographic proof on-chain.</p>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div id="dropZone" onclick="document.getElementById('pdfFileInput').click()" class="border border-dashed border-slate-300 hover:border-slate-500 rounded-lg p-8 text-center cursor-pointer transition bg-slate-50/50 hover:bg-slate-50">
+        <svg class="mx-auto h-8 w-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <p class="text-xs font-medium text-slate-700">Click to select document or drag & drop</p>
+        <p class="text-[11px] text-slate-400 mt-1">Accepts standard PDF documents. SHA-256 executes locally in your browser.</p>
+        <input type="file" id="pdfFileInput" accept="application/pdf" onchange="handleFile(this.files[0])" class="hidden">
+      </div>
+
+      <!-- File Details + Copy Button -->
+      <div id="fileInfo" class="mt-4 hidden p-3 bg-slate-50 border border-slate-200 rounded text-xs space-y-2">
+        <div class="flex justify-between text-slate-600">
+          <span class="font-medium">Selected file:</span>
+          <span id="fileName" class="font-mono text-slate-900"></span>
+        </div>
+        <div class="flex justify-between items-center text-slate-600">
+          <span class="font-medium">Cryptographic Hash:</span>
+          <div class="flex items-center space-x-2">
+            <span id="fileHash" class="font-mono text-[11px] text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200"></span>
+            <button id="copyHashBtn" onclick="copyHashToClipboard()" class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[11px] font-medium transition cursor-pointer">
+              Copy
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button id="verifyBtn" onclick="verifyOnBlockchain()" class="mt-4 w-full bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs py-2.5 rounded-md transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm cursor-pointer" disabled>
+        Execute Verification Query (0 Gas)
+      </button>
+
+      <!-- Verification Result Card with QR Code -->
+      <div id="resultCard" class="mt-5 hidden p-4 rounded-md border text-xs"></div>
+    </section>
+
+    <!-- 2. ISSUANCE VIEW (University Registrar) -->
+    <section id="adminSection" class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm hidden">
+      <div class="border-b border-slate-100 pb-4 mb-6">
+        <h2 class="text-base font-semibold text-slate-900">Registrar Credential Issuance</h2>
+        <p class="text-xs text-slate-500 mt-0.5">Publish a student's diploma record to the decentralized ledger with IPFS persistence.</p>
+      </div>
+
+      <form id="issueForm" onsubmit="issueOnBlockchain(event)" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Student Full Name</label>
+            <input type="text" id="studentName" required class="w-full border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-slate-900 focus:outline-none" placeholder="e.g. Alice Dupont">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Degree / Specialization</label>
+            <input type="text" id="major" required class="w-full border border-slate-300 rounded px-3 py-2 text-xs focus:ring-1 focus:ring-slate-900 focus:outline-none" placeholder="e.g. Master in Software Engineering">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">Original Diploma Document (.PDF)</label>
+          <div class="border border-slate-300 rounded-md p-1.5 bg-white">
+            <input type="file" id="adminPdfInput" accept="application/pdf" required class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 file:cursor-pointer cursor-pointer">
+          </div>
+        </div>
+
+        <button type="submit" id="issueBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs py-2.5 rounded-md transition shadow-sm cursor-pointer">
+          Sign & Publish to Blockchain
+        </button>
+      </form>
+
+      <div id="adminStatus" class="mt-4 hidden p-3 rounded-md text-xs font-medium"></div>
+    </section>
+
+    <!-- 3. REVOCATION VIEW -->
+    <section id="revokeSection" class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm hidden">
+      <div class="border-b border-slate-100 pb-4 mb-6">
+        <h2 class="text-base font-semibold text-red-700">Certificate Invalidation</h2>
+        <p class="text-xs text-slate-500 mt-0.5">Permanently mark a diploma record as revoked on-chain.</p>
+      </div>
+
+      <form id="revokeForm" onsubmit="revokeOnBlockchain(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">Target Diploma Document (.PDF)</label>
+          <div class="border border-slate-300 rounded-md p-1.5 bg-white">
+            <input type="file" id="revokePdfInput" accept="application/pdf" onchange="handleRevokeFile(this.files[0])" required class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 file:cursor-pointer cursor-pointer">
+          </div>
+        </div>
+
+        <div id="revokeFileInfo" class="hidden p-3 bg-slate-50 border border-slate-200 rounded text-xs">
+          <span class="font-medium text-slate-600">Target Hash:</span>
+          <span id="revokeHashDisplay" class="font-mono text-red-700 font-medium ml-2"></span>
+        </div>
+
+        <button type="submit" id="revokeBtn" class="w-full bg-red-700 hover:bg-red-800 text-white font-medium text-xs py-2.5 rounded-md transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm cursor-pointer" disabled>
+          Authorize Revocation Transaction
+        </button>
+      </form>
+
+      <div id="revokeStatus" class="mt-4 hidden p-3 rounded-md text-xs font-medium"></div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-slate-400 text-xs">
+    CertifChain Core Protocol &bull; Architecture Decoupled Verification System
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
