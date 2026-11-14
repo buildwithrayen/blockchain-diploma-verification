@@ -19,35 +19,32 @@ Le système vise à lutter contre la falsification des diplômes et à faciliter
 
 
 
+
 ## 🏗️ Architecture du Projet
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 90, "rankSpacing": 120, "curve": "basis", "htmlLabels": true}}}%%
+
 flowchart TD
-    subgraph Browser["1. Navigateur Client"]
-        Admin["Université Admin"]
-        Recruiter["Recruteur"]
-        Hash1["Calcul SHA-256"]
-        Hash2["Calcul SHA-256"]
+
+    subgraph Browser["1. Navigateur Client (Frontend)"]
+        Admin["🏛️ Université Admin"] -->|Sélectionne PDF| Hash1["Calcul SHA-256 (Local JS)"]
+        Recruiter["🔍 Recruteur"] -->|Dépose PDF| Hash2["Calcul SHA-256 (Local JS)"]
     end
 
     subgraph Storage["2. Stockage Décentralisé"]
-        Pinata["Pinata / IPFS"]
+        Admin -->|Upload Fichier PDF| Pinata["📦 IPFS / Pinata"]
+        Pinata -->|Retourne CID| Admin
     end
 
-    subgraph Blockchain["3. Ethereum Sepolia"]
-        SC["Smart Contract DiplomaVerification"]
+    subgraph Blockchain["3. Ethereum Sepolia (Smart Contract)"]
+        Admin -->|Signe Tx avec MetaMask| SC["📜 DiplomaVerification.sol"]
+        Hash1 -->|Envoie hash et CID| SC
+        Hash2 -->|Demande de vérification| SC
+        SC -->|Résultat de vérification| Recruiter
     end
-
-    Admin -->|Sélectionne PDF| Hash1
-    Admin -->|Upload PDF| Pinata
-    Pinata -->|Retourne CID| Admin
-    Admin -->|Envoie hash et CID| SC
-    Hash1 -->|Hash du diplôme| SC
-
-    Recruiter -->|Dépose PDF| Hash2
-    Hash2 -->|Demande de vérification| SC
-    SC -->|Résultat de vérification| Recruiter
 ```
+
 
 
 
