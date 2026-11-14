@@ -18,29 +18,37 @@ Le système vise à lutter contre la falsification des diplômes et à faciliter
 
 
 
+
 ## 🏗️ Architecture du Projet
 
-### A. Émission d'un diplôme
-
 ```mermaid
-flowchart LR
-    A["Université Admin"] --> B["Frontend<br/>Sélection du PDF<br/>Calcul SHA-256"]
-    B --> C["Pinata / IPFS<br/>Stockage du PDF"]
-    C --> D["CID retourné au frontend"]
-    D --> E["Frontend<br/>Envoi du hash + CID"]
-    E --> F["Smart Contract<br/>Ethereum Sepolia<br/>Enregistrement du diplôme"]
+flowchart TD
+    subgraph Browser["1. Navigateur Client"]
+        Admin["Université Admin"]
+        Recruiter["Recruteur"]
+        Hash1["Calcul SHA-256"]
+        Hash2["Calcul SHA-256"]
+    end
+
+    subgraph Storage["2. Stockage Décentralisé"]
+        Pinata["Pinata / IPFS"]
+    end
+
+    subgraph Blockchain["3. Ethereum Sepolia"]
+        SC["Smart Contract DiplomaVerification"]
+    end
+
+    Admin -->|Sélectionne PDF| Hash1
+    Admin -->|Upload PDF| Pinata
+    Pinata -->|Retourne CID| Admin
+    Admin -->|Envoie hash et CID| SC
+    Hash1 -->|Hash du diplôme| SC
+
+    Recruiter -->|Dépose PDF| Hash2
+    Hash2 -->|Demande de vérification| SC
+    SC -->|Résultat de vérification| Recruiter
 ```
 
-### B. Vérification d'un diplôme
-
-```mermaid
-flowchart LR
-    A["Recruteur"] --> B["Frontend<br/>Dépôt du PDF<br/>Calcul SHA-256"]
-    B --> C["Smart Contract<br/>Ethereum Sepolia<br/>Recherche du hash"]
-    C --> D["Résultat de vérification"]
-    D --> E["Frontend<br/>Affichage du résultat"]
-    E --> F["Recruteur"]
-```
 
 
 
