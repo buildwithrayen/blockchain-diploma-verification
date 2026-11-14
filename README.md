@@ -1,4 +1,4 @@
-# 🎓 CertifChain - Système de Certification & Vérification de Diplômes sur Blockchain
+# 🎓 CertifChain : Système de certification et vérification de diplômes sur blockchain
 
 Projet d'application décentralisée (dApp) permettant l'émission, la certification et la vérification infalsifiable de diplômes académiques en utilisant la blockchain Ethereum et le stockage décentralisé IPFS.
 
@@ -28,17 +28,17 @@ Les diplômes académiques traditionnels (papier ou PDF simple) sont vulnérable
 flowchart TD
 
     subgraph Browser["1. Navigateur Client (Frontend)"]
-        Admin["🏛️ Université Admin"] -->|Sélectionne PDF| Hash1["Calcul SHA-256 (Local JS)"]
-        Recruiter["🔍 Recruteur"] -->|Dépose PDF| Hash2["Calcul SHA-256 (Local JS)"]
+        Admin["Université Admin"] -->|Sélectionne PDF| Hash1["Calcul SHA-256 (Local JS)"]
+        Recruiter["Recruteur"] -->|Dépose PDF| Hash2["Calcul SHA-256 (Local JS)"]
     end
 
     subgraph Storage["2. Stockage Décentralisé"]
-        Admin -->|Upload Fichier PDF| Pinata["📦 IPFS / Pinata"]
+        Admin -->|Upload Fichier PDF| Pinata["IPFS / Pinata"]
         Pinata -->|Retourne CID| Admin
     end
 
     subgraph Blockchain["3. Ethereum Sepolia (Smart Contract)"]
-        Admin -->|Signe Tx avec MetaMask| SC["📜 DiplomaVerification.sol"]
+        Admin -->|Signe Tx avec MetaMask| SC["DiplomaVerification.sol"]
         Hash1 -->|Envoie hash et CID| SC
         Hash2 -->|Demande de vérification| SC
         SC -->|Résultat de vérification| Recruiter
