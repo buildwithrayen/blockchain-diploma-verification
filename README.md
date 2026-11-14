@@ -1,16 +1,14 @@
-# 🎓 CertifChain – Système de Certification & Vérification de Diplômes sur Blockchain
+# 🎓 CertifChain - Système de Certification & Vérification de Diplômes sur Blockchain
+
+Projet d'application décentralisée (dApp) permettant l'émission, la certification et la vérification infalsifiable de diplômes académiques en utilisant la blockchain Ethereum et le stockage décentralisé IPFS.
+
+---
 
 ## 📌 Présentation du Projet
+Les diplômes académiques traditionnels (papier ou PDF simple) sont vulnérables à la falsification numérique. **CertifChain** résout ce problème :
+1. **L'Université** enregistre l'empreinte cryptographique (hash SHA-256) du diplôme et son identifiant IPFS (CID) dans un Smart Contract immuable.
 
-CertifChain est une application décentralisée (dApp) permettant l'émission, la vérification et la révocation de diplômes académiques à l'aide de la blockchain Ethereum et du stockage décentralisé IPFS.
-
-Le système vise à lutter contre la falsification des diplômes et à faciliter leur vérification par les recruteurs.
-
-### Fonctionnalités principales
-
-1. **Émission des diplômes :** L'université sélectionne un diplôme au format PDF. Le système calcule son empreinte numérique SHA-256, stocke le fichier sur IPFS via Pinata et enregistre les informations nécessaires sur la blockchain.
-
-2. **Vérification des diplômes :** Le recruteur sélectionne un fichier PDF. Le système calcule son empreinte SHA-256 et la compare aux données enregistrées sur la blockchain. La vérification utilise un appel en lecture seule, sans frais de gaz à payer par le recruteur.
+2. **Le Recruteur** dépose le fichier PDF reçu sur la plateforme web. Le hash est recalculé localement par le navigateur et vérifié sur la blockchain en **0 seconde, sans frais de gaz**.
 
 3. **Révocation des diplômes :** L'administrateur autorisé peut invalider un diplôme précédemment émis en cas de fraude ou d'erreur.
 
@@ -21,34 +19,29 @@ Le système vise à lutter contre la falsification des diplômes et à faciliter
 
 
 
+
 ## 🏗️ Architecture du Projet
 
 ```mermaid
-%%{init: {"flowchart": {"nodeSpacing": 65, "rankSpacing": 100, "curve": "basis", "htmlLabels": true}}}%%
+%%{init: {"flowchart": {"nodeSpacing": 90, "rankSpacing": 120, "curve": "basis", "htmlLabels": true}}}%%
 
 flowchart TD
 
-    subgraph Client_Side ["1. Client Browser"]
-        A["User / Admin"] -->|Selects PDF| B["Local JS: Web Crypto API"]
-        B -->|Computes locally| C["SHA-256 Hash"]
+    subgraph Browser["1. Navigateur Client (Frontend)"]
+        Admin["🏛️ Université Admin"] -->|Sélectionne PDF| Hash1["Calcul SHA-256 (Local JS)"]
+        Recruiter["🔍 Recruteur"] -->|Dépose PDF| Hash2["Calcul SHA-256 (Local JS)"]
     end
 
-    subgraph Storage ["2. Decentralized Storage"]
-        B -->|Uploads PDF file| D["Pinata / IPFS"]
-        D -->|Returns| E["IPFS CID"]
+    subgraph Storage["2. Stockage Décentralisé"]
+        Admin -->|Upload Fichier PDF| Pinata["📦 IPFS / Pinata"]
+        Pinata -->|Retourne CID| Admin
     end
 
-    subgraph Blockchain ["3. Ethereum Sepolia Blockchain"]
-        A -->|Signs Tx with MetaMask| F["DiplomaVerification Smart Contract"]
-        C -->|pdfHash| F
-        E -->|ipfsCID| F
-        F -->|Stored in| G[("Mapping: bytes32 => Diploma")]
-    end
-
-    subgraph Verification ["4. Recruiter Verification - 0 Gas"]
-        R["Recruiter"] -->|Drops PDF| B2["Local JS SHA-256"]
-        B2 -->|Calls view function| F
-        F -->|Returns Status: Valid / Revoked / Fake| R
+    subgraph Blockchain["3. Ethereum Sepolia (Smart Contract)"]
+        Admin -->|Signe Tx avec MetaMask| SC["📜 DiplomaVerification.sol"]
+        Hash1 -->|Envoie hash et CID| SC
+        Hash2 -->|Demande de vérification| SC
+        SC -->|Résultat de vérification| Recruiter
     end
 ```
 
@@ -58,25 +51,22 @@ flowchart TD
 
 
 
+
 ## 🛠️ Technologies Utilisées
 
-Solidity – Développement du smart contract
+**Smart Contract** : Solidity (^0.8.20)
 
-Ethereum Sepolia Testnet – Réseau blockchain de test
+**Blockchain** : Ethereum Testnet Sepolia
 
-Remix IDE – Compilation, tests unitaires et déploiement du smart contract
+**Environnement de Dev** : Remix IDE
 
-MetaMask – Portefeuille Web3 pour la signature des transactions
+**Front-End** : HTML5, Tailwind CSS, JavaScript ES6
 
-Ethers.js v6 – Interaction entre le frontend et la blockchain
+**Interaction Web3** : ethers.js (v6)
 
-HTML5, Tailwind CSS, JavaScript (ES6) – Interface utilisateur moderne
+**Stockage Décentralisé** : IPFS via Pinata API
 
-Pinata API – Gestion de l'hébergement IPFS
-
-IPFS – Stockage décentralisé et immuable des fichiers PDF
-
-SHA-256 – Empreinte cryptographique calculée localement par le navigateur
+**Portefeuille Web3** : Extension MetaMask
 
 
 ## 📋 Informations du Smart Contract
@@ -87,22 +77,20 @@ Réseau : Ethereum Sepolia Testnet
 
 Chain ID : 11155111
 
-Adresse du contrat déployé : 0x21F35365a6547Db760910D4d788f2Dd511a7753A
+**Adresse du contrat déployé (Sepolia)** : 0x21F35365a6547Db760910D4d788f2Dd511a7753A
 
-Fonctions principales
+**Fonctions principales** :
 
-issueDiploma(bytes32 _pdfHash, string _studentName, string _major, string _ipfsCID) : Enregistre le diplôme sur la blockchain (réservé à l'administrateur).
+issueDiploma(bytes32 _pdfHash, string _studentName, string _major, string _ipfsCID) : Réservé à l'université (onlyAdmin). Enregistre le diplôme.
 
-verifyDiploma(bytes32 _pdfHash) : Vérifie l'existence et la validité d'un diplôme (fonction publique gratuite, 0 gas).
+verifyDiploma(bytes32 _pdfHash) : view returns (...) : Fonction de lecture publique gratuite (0 gas).
 
-revokeDiploma(bytes32 _pdfHash) : Révoque un diplôme précédemment enregistré (réservé à l'administrateur).
+revokeDiploma(bytes32 _pdfHash) : Permet à l'université d'invalider un diplôme en cas d'erreur ou de fraude.
 
 
 ## 🧪 Tests du Smart Contract
 
 Les tests unitaires automatisés ont été exécutés avec succès dans Remix IDE.
-
-Scénarios de test validés :
 
 Vérification de l'attribution correcte de l'adresse administrateur (universityAdmin).
 
