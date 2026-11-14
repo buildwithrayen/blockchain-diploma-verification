@@ -76,16 +76,19 @@ flowchart TD
 
 **Fonctions principales** :
 
-issueDiploma(bytes32 _pdfHash, string _studentName, string _major, string _ipfsCID) : Réservé à l'université (onlyAdmin). Enregistre le diplôme.
 
-verifyDiploma(bytes32 _pdfHash) : view returns (...) : Fonction de lecture publique gratuite (0 gas).
+1. **`issueDiploma(bytes32 _pdfHash, string _studentName, string _major, string _ipfsCID)`** : Réservé à l'université (`onlyAdmin`). Enregistre le diplôme.
 
-revokeDiploma(bytes32 _pdfHash) : Permet à l'université d'invalider un diplôme en cas d'erreur ou de fraude.
+2. **`verifyDiploma(bytes32 _pdfHash)`** : `view returns (...)` : Fonction de lecture publique gratuite (0 gas).
+
+3. **`revokeDiploma(bytes32 _pdfHash)`** : Permet à l'université d'invalider un diplôme en cas d'erreur ou de fraude.
+
 
 
 ## 🧪 Tests du Smart Contract
 
 Les tests unitaires automatisés ont été exécutés avec succès dans Remix IDE.
+
 
 1. Vérification de l'attribution correcte de l'adresse administrateur (universityAdmin).
 
@@ -111,9 +114,7 @@ Les tests unitaires automatisés ont été exécutés avec succès dans Remix ID
    python -m http.server 3000
    ```
 
-4. Ouvrir votre navigateur sur :
-
-   http://localhost:3000
+4. Ouvrir votre navigateur sur http://localhost:3000.
 
 5. Connecter MetaMask configuré sur le réseau **Sepolia**.
 
