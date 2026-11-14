@@ -54,7 +54,7 @@ flowchart TD
 
 ## 🛠️ Technologies Utilisées
 
-**Smart Contract** : Solidity (^0.8.20)
+**Smart Contract** : Solidity (^0.8.34)
 
 **Blockchain** : Ethereum Testnet Sepolia
 
@@ -71,11 +71,6 @@ flowchart TD
 
 ## 📋 Informations du Smart Contract
 
-Fichier : DiplomaVerification.sol
-
-Réseau : Ethereum Sepolia Testnet
-
-Chain ID : 11155111
 
 **Adresse du contrat déployé (Sepolia)** : 0x21F35365a6547Db760910D4d788f2Dd511a7753A
 
@@ -92,14 +87,35 @@ revokeDiploma(bytes32 _pdfHash) : Permet à l'université d'invalider un diplôm
 
 Les tests unitaires automatisés ont été exécutés avec succès dans Remix IDE.
 
-Vérification de l'attribution correcte de l'adresse administrateur (universityAdmin).
+1. Vérification de l'attribution correcte de l'adresse administrateur (universityAdmin).
 
-Enregistrement conforme et persistance des métadonnées d'un diplôme.
+2. Enregistrement conforme et persistance des métadonnées d'un diplôme.
 
-Vérification avec succès d'un diplôme authentique (exists = true, isValid = true).
+3. Vérification avec succès d'un diplôme authentique (exists = true, isValid = true).
 
-Détection et rejet immédiat d'un diplôme falsifié ou altéré (exists = false).
+4. Détection et rejet immédiat d'un diplôme falsifié ou altéré (exists = false).
 
-Blocage strict lors d'une tentative d'enregistrement d'un diplôme en double.
+5. Blocage strict lors d'une tentative d'enregistrement d'un diplôme en double.
 
-Révocation effective d'un diplôme et validation de son statut révoqué (isValid = false).
+6. Révocation effective d'un diplôme et validation de son statut révoqué (isValid = false).
+
+
+
+## 🚀 Installation & Exécution Locale
+
+
+1. Cloner ou télécharger le dossier du projet.
+2. Lancer un serveur web local dans le dossier :
+
+   ```bash
+   python -m http.server 3000
+   ```
+
+4. Ouvrir votre navigateur sur :
+
+   http://localhost:3000
+
+5. Connecter MetaMask configuré sur le réseau **Sepolia**.
+
+
+
