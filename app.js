@@ -5,8 +5,7 @@
 const CONTRACT_ADDRESS = "0x21F35365a6547Db760910D4d788f2Dd511a7753A";
 
 // ⚠️ PASTE YOUR PINATA JWT (or leave as is):
-const PINATA_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIwMjA3YjU5MS00YjM5LTRhZjUtODc0NS1hNDI2OTUwOTQxMGQiLCJlbWFpbCI6InJheWVuc3JpZGkyMDIwQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJlY2Y2ZTExMDc4NDVjOTM0NGQwMyIsInNjb3BlZEtlZXlTZWNyZXQiOiIxOGRmY2FkODkyMTcyNTVjMzc4NGEzM2Y5ZmJkYjdmOTBjZGJjZjIxZDQwYjBiMTQ2ZDhjYmU2MjhmNjgwZjEiLCJleHAiOjE4MjYxNDI0OTF9.eiVRdZEphxv-D4Z3S7vHMJzPexg2msX44d_qkMwBsrw";
-
+const PINATA_JWT = ""; // Insert your Pinata JWT here
 const CONTRACT_ABI = [
   "function issueDiploma(bytes32 _pdfHash, string _studentName, string _major, string _ipfsCID) public",
   "function verifyDiploma(bytes32 _pdfHash) public view returns (bool exists, string studentName, string major, string ipfsCID, uint256 issueDate, bool isValid)",
