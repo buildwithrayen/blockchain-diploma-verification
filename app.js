@@ -1,11 +1,10 @@
 // ==========================================
 // 1. CONFIGURATION
 // ==========================================
-// ⚠️ PASTE YOUR SEPOLIA CONTRACT ADDRESS HERE:
+
 const CONTRACT_ADDRESS = "0x21F35365a6547Db760910D4d788f2Dd511a7753A";
 
-// ⚠️ PASTE YOUR PINATA JWT (or leave as is):
-const PINATA_JWT = ""; // Insert your Pinata JWT here
+const PINATA_JWT = ""; 
 const CONTRACT_ABI = [
   "function issueDiploma(bytes32 _pdfHash, string _studentName, string _major, string _ipfsCID) public",
   "function verifyDiploma(bytes32 _pdfHash) public view returns (bool exists, string studentName, string major, string ipfsCID, uint256 issueDate, bool isValid)",
