@@ -87,20 +87,14 @@ flowchart TD
 
 ## 🧪 Tests du Smart Contract
 
-Les tests unitaires automatisés ont été exécutés avec succès dans Remix IDE.
+**Les tests unitaires automatisés ont été exécutés avec succès dans Remix IDE :**
 
-
-1. Vérification de l'attribution correcte de l'adresse administrateur (universityAdmin).
-
-2. Enregistrement conforme et persistance des métadonnées d'un diplôme.
-
-3. Vérification avec succès d'un diplôme authentique (exists = true, isValid = true).
-
-4. Détection et rejet immédiat d'un diplôme falsifié ou altéré (exists = false).
-
-5. Blocage strict lors d'une tentative d'enregistrement d'un diplôme en double.
-
-6. Révocation effective d'un diplôme et validation de son statut révoqué (isValid = false).
+1. **Vérification de l'administrateur :** attribution correcte de l'adresse administrateur (`universityAdmin`).
+2. **Enregistrement d'un diplôme :** enregistrement conforme et persistance des métadonnées.
+3. **Vérification d'un diplôme authentique :** résultat positif (`exists = true`, `isValid = true`).
+4. **Détection d'un diplôme falsifié ou altéré :** rejet immédiat (`exists = false`).
+5. **Prévention des doublons :** blocage strict lors d'une tentative d'enregistrement d'un diplôme déjà existant.
+6. **Révocation d'un diplôme :** révocation effective et confirmation de son statut révoqué (`isValid = false`).
 
 
 
